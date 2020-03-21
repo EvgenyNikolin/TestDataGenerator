@@ -3,7 +3,7 @@ from data_generator.data_generator import DataGenerator
 from data_generator.schema_parser import SchemaParser as parser
 
 tbl_schema = {
-    'Id': {'Type': 'INT', 'Length': [8], 'Constraints': 'NOT NULL, UNIQUE'}
+    'Id': {'Type': 'INT', 'Length': [10], 'Constraints': 'NOT NULL, UNIQUE'}
     , 'Name': {'Type': 'VARCHAR', 'Length': [50]}
     , 'Salary': {'Type': 'NUMBER', 'Length': [15, 4]}
     , 'Hire_date': {'Type': 'DATETIME', 'Format': '%Y-%m-%d'}
