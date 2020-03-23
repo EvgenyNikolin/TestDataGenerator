@@ -7,7 +7,14 @@ from dateutil.parser import parse
 class RandomUnits(object):
 
     @staticmethod
-    def get_random_str(p_len: int, p_is_min: bool = None, p_is_max: bool = None):
+    def get_random_str(p_len: int
+                       , p_allow_spec_symbols: bool = True
+                       , p_allow_lowercase: bool = True
+                       , p_allow_uppercase: bool = True
+                       , p_allow_chars: bool = True
+                       , p_allow_digits: bool = True
+                       , p_is_min: bool = None
+                       , p_is_max: bool = None):
         symbols = string.ascii_letters.join(string.punctuation).join(string.digits)
 
         if p_is_min and p_is_max:
