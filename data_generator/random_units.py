@@ -28,8 +28,6 @@ class RandomUnits(object):
             elif len(p_disabled_spec_symbols) > 0:
                 for curr in p_disabled_spec_symbols:
                     symbols = symbols.replace(curr, '')
-
-            print(symbols)
         if p_allow_digits:
             symbols = symbols + string.digits
         if p_allow_chars:
@@ -99,11 +97,11 @@ class RandomUnits(object):
 
         return datetime.datetime.strftime(rand_day_dt, p_date_mask)
 
+    # generates bits in string format by default (True/False)
+    # if p_num_format = True then generates bits in numeric format (0/1)
     @staticmethod
-    def get_random_bit(p_str_format: bool = 1, p_num_format: bool = 0, p_is_min: bool = None, p_is_max: bool = None):
-        if p_str_format and p_num_format:
-            return bool(random.randrange(2))
-        elif p_str_format:
-            return bool(random.randrange(2))
-        elif p_num_format:
+    def get_random_bit(p_num_format: bool, p_is_min: bool = None, p_is_max: bool = None):
+        if p_num_format:
             return random.randrange(2)
+        else:
+            return bool(random.randrange(2))
