@@ -5,12 +5,26 @@ import re
 
 
 class DataGenerator (object):
-    def __init__(self, p_tbl_schema: dict):
+    def __init__(self, p_tbl_schema: dict, p_scenarios: list = ['min', 'max', 'rand', 'null']):
         self.table_schema = parser.parse_table_schema(p_tbl_schema)
         self.df = pd.DataFrame(columns = list(self.table_schema['Name']))
+        self.data_generation_positive_scenarios = p_scenarios
 
     def __get_column_property_by_name(self, p_col_name: str, p_property_name: str):
         return self.table_schema.query('Name == \'' + p_col_name + '\'')[p_property_name].values[0]
+
+    def __insert_row_into_df(self, p_row: dict):
+        self.df = self.df.append(p_row, ignore_index = True)
+
+    def print_dataframe(self):
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.max_colwidth', 200)
+        pd.set_option('display.width', 5000)
+        print(self.df)
+
+    def export_df_to_csv(self, p_save_dir: str):
+        self.df.to_csv(p_save_dir, index = False, encoding = 'utf-8', doublequote = True)
 
     # supported positive scenarios:
     # 'rand' - random bit
@@ -73,8 +87,12 @@ class DataGenerator (object):
         allow_uppercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO UPPER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_chars = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO CHARS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_digits = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO DIGITS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
+        remove_length_limit = True if re.match('[a-zA-Z0-9,; \[\]\-.]*REMOVE LENGTH LIMIT[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else False
 
         column_length = self.__get_column_property_by_name(p_column_name, 'Length')[0]
+
+        if not remove_length_limit:
+            column_length = column_length if column_length <= 1000 else 1000
 
         if p_scenario_name == 'min':
             return rand_units.get_random_str(column_length
@@ -107,12 +125,15 @@ class DataGenerator (object):
     def __generate_data_by_scenario(self, p_column_name: str, p_scenario_name: str):
         column_type = self.__get_column_property_by_name(p_column_name, 'Type')
 
-        if column_type == 'INT':
+        if p_scenario_name == 'null':
+            return ''
+        elif column_type == 'INT':
             return self.__generate_int_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'DECIMAL':
             return self.__generate_decimal_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'DATETIME':
-            return self.__generate_date_by_scenario(p_column_name, p_scenario_name)
+            # currently only 'rand' scenario is supported
+            return self.__generate_date_by_scenario(p_column_name, 'rand')
         elif column_type == 'BIT':
             return self.__generate_bit_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'STRING':
@@ -120,4 +141,12 @@ class DataGenerator (object):
 
     def generate_test_data(self):
         for curr_col in self.table_schema['Name']:
-            print(self.__generate_data_by_scenario(curr_col, 'rand'))
+            for scenario in self.data_generation_positive_scenarios:
+                df_row = dict()
+                for col in self.table_schema['Name']:
+                    if curr_col == col:
+                        df_row[col] = self.__generate_data_by_scenario(col, scenario)
+                    else:
+                        df_row[col] = self.__generate_data_by_scenario(col, 'rand')
+
+                self.__insert_row_into_df(df_row)

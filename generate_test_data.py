@@ -1,9 +1,9 @@
-from data_generator.random_units import RandomUnits as units
 from data_generator.data_generator import DataGenerator
-from data_generator.schema_parser import SchemaParser as parser
 
 # supported constraints:
+# for all data types:
 # NOT NULL
+# for strings:
 # NO LOWER
 # NO UPPER
 # NO CHARS
@@ -11,13 +11,14 @@ from data_generator.schema_parser import SchemaParser as parser
 # NO SPEC SYMBOLS
 # DISABLE SPEC SYMBOLS [] --> TBD
 # ALLOW SPEC SYMBOLS [] --> TBD
+# REMOVE LENGTH LIMIT
 
 # bit values generation formats:
 # numeric
 # string
 tbl_schema = {
     'Id': {'Type': 'INT', 'Length': [10], 'Constraints': 'NOT NULL, UNIQUE'}
-    , 'Name': {'Type': 'VARCHAR', 'Length': [50], 'Constraints': 'NO UPPER, NO SPEC SYMBOLS'}
+    , 'Name': {'Type': 'VARCHAR', 'Length': [2000], 'Constraints': 'NO SPEC SYMBOLS'}
     , 'Salary': {'Type': 'NUMBER', 'Length': [15, 4]}
     , 'Hire_date': {'Type': 'DATETIME', 'Format': '%Y-%m-%d'}
     , 'Is_active': {'Type': 'BIT', 'Format': 'numeric', 'Constraints': 'NOT NULL'}
@@ -29,3 +30,5 @@ data_obj = DataGenerator(tbl_schema)
 print(data_obj.table_schema)
 print('\n')
 data_obj.generate_test_data()
+data_obj.print_dataframe()
+data_obj.export_df_to_csv('C:\\Users\\Yevhen_Nikolin\\Desktop\\test.csv')
