@@ -12,6 +12,9 @@ class DataGenerator (object):
     def __get_column_property_by_name(self, p_col_name: str, p_property_name: str):
         return self.table_schema.query('Name == \'' + p_col_name + '\'')[p_property_name].values[0]
 
+    def __insert_row_into_df(self, p_row: dict):
+        self.df = self.df.append(p_row, ignore_index = True)
+
     # supported positive scenarios:
     # 'rand' - random bit
     def __generate_bit_by_scenario(self, p_column_name: str, p_scenario_name: str):
@@ -112,7 +115,8 @@ class DataGenerator (object):
         elif column_type == 'DECIMAL':
             return self.__generate_decimal_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'DATETIME':
-            return self.__generate_date_by_scenario(p_column_name, p_scenario_name)
+            # currently only 'rand' scenario is supported
+            return self.__generate_date_by_scenario(p_column_name, 'rand')
         elif column_type == 'BIT':
             return self.__generate_bit_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'STRING':
@@ -120,4 +124,13 @@ class DataGenerator (object):
 
     def generate_test_data(self):
         for curr_col in self.table_schema['Name']:
-            print(self.__generate_data_by_scenario(curr_col, 'rand'))
+            for scenario in ['min', 'max', 'rand']:
+                df_row = dict()
+                print(scenario + ' for column: ' + curr_col)
+                for col in self.table_schema['Name']:
+                    if curr_col == col:
+                        df_row[col] = self.__generate_data_by_scenario(col, scenario)
+                    else:
+                        df_row[col] = self.__generate_data_by_scenario(col, 'rand')
+
+                print(df_row)
