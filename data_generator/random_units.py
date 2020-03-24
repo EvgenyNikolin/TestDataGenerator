@@ -89,7 +89,7 @@ class RandomUnits(object):
         return datetime.datetime.strftime(rand_day_dt, p_date_mask)
 
     @staticmethod
-    def get_random_bit(p_str_format: bool = 1, p_num_format: bool = 0):
+    def get_random_bit(p_str_format: bool = 1, p_num_format: bool = 0, p_is_min: bool = None, p_is_max: bool = None):
         if p_str_format and p_num_format:
             return bool(random.randrange(2))
         elif p_str_format:

@@ -5,15 +5,23 @@ import re
 
 
 class DataGenerator (object):
-    def __init__(self, p_tbl_schema: dict):
+    def __init__(self, p_tbl_schema: dict, p_scenarios: list = ['min', 'max', 'rand', 'null']):
         self.table_schema = parser.parse_table_schema(p_tbl_schema)
         self.df = pd.DataFrame(columns = list(self.table_schema['Name']))
+        self.data_generation_positive_scenarios = p_scenarios
 
     def __get_column_property_by_name(self, p_col_name: str, p_property_name: str):
         return self.table_schema.query('Name == \'' + p_col_name + '\'')[p_property_name].values[0]
 
     def __insert_row_into_df(self, p_row: dict):
         self.df = self.df.append(p_row, ignore_index = True)
+
+    def print_dataframe(self):
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.max_colwidth', 200)
+        pd.set_option('display.width', 5000)
+        print(self.df)
 
     # supported positive scenarios:
     # 'rand' - random bit
@@ -110,7 +118,9 @@ class DataGenerator (object):
     def __generate_data_by_scenario(self, p_column_name: str, p_scenario_name: str):
         column_type = self.__get_column_property_by_name(p_column_name, 'Type')
 
-        if column_type == 'INT':
+        if p_scenario_name == 'null':
+            return ''
+        elif column_type == 'INT':
             return self.__generate_int_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'DECIMAL':
             return self.__generate_decimal_by_scenario(p_column_name, p_scenario_name)
@@ -124,13 +134,12 @@ class DataGenerator (object):
 
     def generate_test_data(self):
         for curr_col in self.table_schema['Name']:
-            for scenario in ['min', 'max', 'rand']:
+            for scenario in self.data_generation_positive_scenarios:
                 df_row = dict()
-                print(scenario + ' for column: ' + curr_col)
                 for col in self.table_schema['Name']:
                     if curr_col == col:
                         df_row[col] = self.__generate_data_by_scenario(col, scenario)
                     else:
                         df_row[col] = self.__generate_data_by_scenario(col, 'rand')
 
-                print(df_row)
+                self.__insert_row_into_df(df_row)
