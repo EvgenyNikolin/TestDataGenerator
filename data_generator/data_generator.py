@@ -15,7 +15,7 @@ class DataGenerator (object):
     # supported positive scenarios:
     # 'rand' - random bit
     def __generate_bit_by_scenario(self, p_column_name: str, p_scenario_name: str):
-        column_constraints = self.__get_column_property_by_name(p_column_name, 'Format').upper
+        column_constraints = self.__get_column_property_by_name(p_column_name, 'Format').upper()
         is_str_format = False if re.match('[a-zA-Z0-9,; \[\]\-.]*STRING[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         is_num_format = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NUMERIC[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
 
@@ -25,7 +25,7 @@ class DataGenerator (object):
     # supported positive scenarios:
     # 'rand' - random date
     def __generate_date_by_scenario(self, p_column_name: str, p_scenario_name: str):
-        date_mask = self.__get_column_property_by_name(p_column_name, 'Format')[0]
+        date_mask = self.__get_column_property_by_name(p_column_name, 'Format')
 
         if p_scenario_name == 'rand':
             return rand_units.get_random_date(date_mask)
@@ -67,7 +67,7 @@ class DataGenerator (object):
     # 'max' - maximum_length value
     # 'rand' - random-length value
     def __generate_str_by_scenario(self, p_column_name: str, p_scenario_name: str):
-        column_constraints = self.__get_column_property_by_name(p_column_name, 'Constraints').upper
+        column_constraints = self.__get_column_property_by_name(p_column_name, 'Constraints').upper()
         allow_spec_symbols = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO SPEC SYMBOLS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_lowercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO LOWER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_uppercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO UPPER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
@@ -120,4 +120,4 @@ class DataGenerator (object):
 
     def generate_test_data(self):
         for curr_col in self.table_schema['Name']:
-            print(self.__get_column_property_by_name(curr_col, 'Length'))
+            print(self.__generate_data_by_scenario(curr_col, 'rand'))

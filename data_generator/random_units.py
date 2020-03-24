@@ -15,7 +15,17 @@ class RandomUnits(object):
                        , p_allow_digits: bool = True
                        , p_is_min: bool = None
                        , p_is_max: bool = None):
-        symbols = string.ascii_letters.join(string.punctuation).join(string.digits)
+        symbols = ''
+
+        if p_allow_spec_symbols:
+            symbols = symbols + string.punctuation
+        if p_allow_digits:
+            symbols = symbols + string.digits
+        if p_allow_chars:
+            if p_allow_lowercase:
+                symbols = symbols + string.ascii_lowercase
+            if p_allow_uppercase:
+                symbols = symbols + string.ascii_uppercase
 
         if p_is_min and p_is_max:
             return random.choice(symbols)

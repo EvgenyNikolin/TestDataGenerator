@@ -17,7 +17,7 @@ from data_generator.schema_parser import SchemaParser as parser
 # string
 tbl_schema = {
     'Id': {'Type': 'INT', 'Length': [10], 'Constraints': 'NOT NULL, UNIQUE'}
-    , 'Name': {'Type': 'VARCHAR', 'Length': [50], 'Constraints': 'LOWER'}
+    , 'Name': {'Type': 'VARCHAR', 'Length': [50], 'Constraints': 'NO UPPER, NO SPEC SYMBOLS'}
     , 'Salary': {'Type': 'NUMBER', 'Length': [15, 4]}
     , 'Hire_date': {'Type': 'DATETIME', 'Format': '%Y-%m-%d'}
     , 'Is_active': {'Type': 'BIT', 'Format': 'numeric', 'Constraints': 'NOT NULL'}
