@@ -18,7 +18,8 @@ class RandomUnits(object):
         symbols = ''
 
         if p_allow_spec_symbols:
-            symbols = symbols + string.punctuation
+            # do not generate strings with double-quote due to possible quotation issues
+            symbols = symbols + string.punctuation.replace('"', '')
         if p_allow_digits:
             symbols = symbols + string.digits
         if p_allow_chars:

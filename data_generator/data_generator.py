@@ -23,6 +23,9 @@ class DataGenerator (object):
         pd.set_option('display.width', 5000)
         print(self.df)
 
+    def export_df_to_csv(self, p_save_dir: str):
+        self.df.to_csv(p_save_dir, index = False, encoding = 'utf-8', doublequote = True)
+
     # supported positive scenarios:
     # 'rand' - random bit
     def __generate_bit_by_scenario(self, p_column_name: str, p_scenario_name: str):
@@ -84,8 +87,12 @@ class DataGenerator (object):
         allow_uppercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO UPPER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_chars = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO CHARS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_digits = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO DIGITS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
+        remove_length_limit = True if re.match('[a-zA-Z0-9,; \[\]\-.]*REMOVE LENGTH LIMIT[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else False
 
         column_length = self.__get_column_property_by_name(p_column_name, 'Length')[0]
+
+        if not remove_length_limit:
+            column_length = column_length if column_length <= 1000 else 1000
 
         if p_scenario_name == 'min':
             return rand_units.get_random_str(column_length
