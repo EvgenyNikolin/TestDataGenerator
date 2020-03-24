@@ -82,43 +82,58 @@ class DataGenerator (object):
     # 'rand' - random-length value
     def __generate_str_by_scenario(self, p_column_name: str, p_scenario_name: str):
         column_constraints = self.__get_column_property_by_name(p_column_name, 'Constraints').upper()
+        spec_symbols = self.__get_column_property_by_name(p_column_name, 'Format')
+        allowed_spec_symbols = ''
+        disabled_spec_symbols = ''
         allow_spec_symbols = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO SPEC SYMBOLS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_lowercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO LOWER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_uppercase = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO UPPER[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_chars = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO CHARS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
         allow_digits = False if re.match('[a-zA-Z0-9,; \[\]\-.]*NO DIGITS[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else True
+        allow_spec_symbols_from_list = True if re.match('[a-zA-Z0-9,; \[\]\-.]*ALLOW SPEC SYMBOLS FROM LIST[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else False
+        disable_spec_symbols_from_list = True if re.match('[a-zA-Z0-9,; \[\]\-.]*DISABLE SPEC SYMBOLS FROM LIST[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else False
         remove_length_limit = True if re.match('[a-zA-Z0-9,; \[\]\-.]*REMOVE LENGTH LIMIT[a-zA-Z0-9,; \[\]\-.]*', column_constraints) else False
 
         column_length = self.__get_column_property_by_name(p_column_name, 'Length')[0]
 
         if not remove_length_limit:
             column_length = column_length if column_length <= 1000 else 1000
+        if allow_spec_symbols_from_list:
+            allowed_spec_symbols = spec_symbols
+        if disable_spec_symbols_from_list:
+            disabled_spec_symbols = spec_symbols
 
         if p_scenario_name == 'min':
-            return rand_units.get_random_str(column_length
-                                             , allow_spec_symbols
-                                             , allow_lowercase
-                                             , allow_uppercase
-                                             , allow_chars
-                                             , allow_digits
+            return rand_units.get_random_str(p_len = column_length
+                                             , p_allow_spec_symbols = allow_spec_symbols
+                                             , p_allow_lowercase = allow_lowercase
+                                             , p_allow_uppercase = allow_uppercase
+                                             , p_allow_chars = allow_chars
+                                             , p_allow_digits = allow_digits
+                                             , p_allowed_spec_symbols = allowed_spec_symbols
+                                             , p_disabled_spec_symbols = disabled_spec_symbols
                                              , p_is_min = True
                                              , p_is_max = False)
         elif p_scenario_name == 'max':
-            return rand_units.get_random_str(column_length
-                                             , allow_spec_symbols
-                                             , allow_lowercase
-                                             , allow_uppercase
-                                             , allow_chars
-                                             , allow_digits
+            return rand_units.get_random_str(p_len = column_length
+                                             , p_allow_spec_symbols = allow_spec_symbols
+                                             , p_allow_lowercase = allow_lowercase
+                                             , p_allow_uppercase = allow_uppercase
+                                             , p_allow_chars = allow_chars
+                                             , p_allow_digits = allow_digits
+                                             , p_allowed_spec_symbols = allowed_spec_symbols
+                                             , p_disabled_spec_symbols = disabled_spec_symbols
                                              , p_is_min = False
                                              , p_is_max = True)
         elif p_scenario_name == 'rand':
-            return rand_units.get_random_str(column_length
-                                             , allow_spec_symbols
-                                             , allow_lowercase
-                                             , allow_uppercase
-                                             , allow_chars
-                                             , allow_digits
+            return rand_units.get_random_str(p_len = column_length
+                                             , p_allow_spec_symbols = allow_spec_symbols
+                                             , p_allow_lowercase = allow_lowercase
+                                             , p_allow_uppercase = allow_uppercase
+                                             , p_allow_chars = allow_chars
+                                             , p_allow_digits = allow_digits
+                                             , p_allowed_spec_symbols = allowed_spec_symbols
+                                             , p_disabled_spec_symbols = disabled_spec_symbols
                                              , p_is_min = False
                                              , p_is_max = False)
 

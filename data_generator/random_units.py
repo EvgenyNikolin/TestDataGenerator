@@ -13,6 +13,8 @@ class RandomUnits(object):
                        , p_allow_uppercase: bool = True
                        , p_allow_chars: bool = True
                        , p_allow_digits: bool = True
+                       , p_allowed_spec_symbols: str = ''
+                       , p_disabled_spec_symbols: str = ''
                        , p_is_min: bool = None
                        , p_is_max: bool = None):
         symbols = ''
@@ -20,6 +22,14 @@ class RandomUnits(object):
         if p_allow_spec_symbols:
             # do not generate strings with double-quote due to possible quotation issues
             symbols = symbols + string.punctuation.replace('"', '')
+
+            if len(p_allowed_spec_symbols) > 0:
+                symbols = p_allowed_spec_symbols
+            elif len(p_disabled_spec_symbols) > 0:
+                for curr in p_disabled_spec_symbols:
+                    symbols = symbols.replace(curr, '')
+
+            print(symbols)
         if p_allow_digits:
             symbols = symbols + string.digits
         if p_allow_chars:

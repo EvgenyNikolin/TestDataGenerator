@@ -9,8 +9,8 @@ from data_generator.data_generator import DataGenerator
 # NO CHARS
 # NO DIGITS
 # NO SPEC SYMBOLS
-# DISABLE SPEC SYMBOLS [] --> TBD
-# ALLOW SPEC SYMBOLS [] --> TBD
+# DISABLE SPEC SYMBOLS FROM LIST
+# ALLOW SPEC SYMBOLS FROM LIST
 # REMOVE LENGTH LIMIT
 
 # bit values generation formats:
@@ -18,7 +18,7 @@ from data_generator.data_generator import DataGenerator
 # string
 tbl_schema = {
     'Id': {'Type': 'INT', 'Length': [10], 'Constraints': 'NOT NULL, UNIQUE'}
-    , 'Name': {'Type': 'VARCHAR', 'Length': [2000], 'Constraints': 'NO SPEC SYMBOLS'}
+    , 'Name': {'Type': 'VARCHAR', 'Length': [50], 'Format': '+,-./:;<=>?@', 'Constraints': 'DISABLE SPEC SYMBOLS FROM LIST'}
     , 'Salary': {'Type': 'NUMBER', 'Length': [15, 4]}
     , 'Hire_date': {'Type': 'DATETIME', 'Format': '%Y-%m-%d'}
     , 'Is_active': {'Type': 'BIT', 'Format': 'numeric', 'Constraints': 'NOT NULL'}
