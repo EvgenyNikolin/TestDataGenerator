@@ -14,7 +14,8 @@ class SchemaParser(object):
         print(self.table_schema)
 
     def get_column_property_by_name(self, p_col_name: str, p_property_name: str):
-        return self.table_schema.query('Name == \'' + p_col_name + '\'')[p_property_name].values[0]
+        value = self.table_schema.query('Name == \'' + p_col_name + '\'')[p_property_name].values[0]
+        return '' if value is None else value
 
     def get_list_of_columns(self):
         return list(self.table_schema['Name'])

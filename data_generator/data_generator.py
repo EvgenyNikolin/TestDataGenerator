@@ -84,6 +84,7 @@ class DataGenerator (object):
         no_uppercase = not self.schema_obj.no_uppercase(p_column_name)
         no_characters = not self.schema_obj.no_characters(p_column_name)
         no_digits = not self.schema_obj.no_digits(p_column_name)
+        not_null = not self.schema_obj.not_null(p_column_name)
         allow_spec_symbols_from_list = self.schema_obj.allow_spec_symbols_from_list(p_column_name)
         disable_spec_symbols_from_list = self.schema_obj.disable_spec_symbols_from_list(p_column_name)
         remove_length_limit = self.schema_obj.remove_length_limit(p_column_name)
@@ -104,6 +105,7 @@ class DataGenerator (object):
                                              , p_allow_uppercase=no_uppercase
                                              , p_allow_chars=no_characters
                                              , p_allow_digits=no_digits
+                                             , p_allow_nulls=not_null
                                              , p_allowed_spec_symbols=allowed_spec_symbols
                                              , p_disabled_spec_symbols=disabled_spec_symbols
                                              , p_is_min=True
@@ -115,6 +117,7 @@ class DataGenerator (object):
                                              , p_allow_uppercase=no_uppercase
                                              , p_allow_chars=no_characters
                                              , p_allow_digits=no_digits
+                                             , p_allow_nulls=not_null
                                              , p_allowed_spec_symbols=allowed_spec_symbols
                                              , p_disabled_spec_symbols=disabled_spec_symbols
                                              , p_is_min=False
@@ -126,6 +129,7 @@ class DataGenerator (object):
                                              , p_allow_uppercase=no_uppercase
                                              , p_allow_chars=no_characters
                                              , p_allow_digits=no_digits
+                                             , p_allow_nulls=not_null
                                              , p_allowed_spec_symbols=allowed_spec_symbols
                                              , p_disabled_spec_symbols=disabled_spec_symbols
                                              , p_is_min=False
@@ -134,7 +138,7 @@ class DataGenerator (object):
     def __generate_data_by_scenario(self, p_column_name: str, p_scenario_name: str):
         column_type = self.schema_obj.get_column_property_by_name(p_column_name, 'Type')
 
-        if p_scenario_name == 'null':
+        if p_scenario_name == 'null' and not self.schema_obj.not_null(p_column_name):
             return ''
         elif column_type == 'INT':
             return self.__generate_int_by_scenario(p_column_name, p_scenario_name)

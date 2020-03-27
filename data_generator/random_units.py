@@ -13,6 +13,7 @@ class RandomUnits(object):
                        , p_allow_uppercase: bool = True
                        , p_allow_chars: bool = True
                        , p_allow_digits: bool = True
+                       , p_allow_nulls: bool = None
                        , p_allowed_spec_symbols: str = ''
                        , p_disabled_spec_symbols: str = ''
                        , p_is_min: bool = None
@@ -44,6 +45,7 @@ class RandomUnits(object):
             return ''.join(random.choice(symbols) for i in range(p_len))
         else:
             rand_len = random.randrange(p_len + 1) # +1 because randrange function does not consider the last item
+            rand_len = 1 if rand_len == 0 and not p_allow_nulls else rand_len
             return ''.join(random.choice(symbols) for i in range(rand_len))
 
     @staticmethod
