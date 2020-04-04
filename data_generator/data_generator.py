@@ -138,8 +138,8 @@ class DataGenerator (object):
     def __generate_data_by_scenario(self, p_column_name: str, p_scenario_name: str):
         column_type = self.schema_obj.get_column_property_by_name(p_column_name, 'Type')
 
-        if p_scenario_name == 'null' and not self.schema_obj.not_null(p_column_name):
-            return ''
+        if p_scenario_name == 'null' and self.schema_obj.not_null(p_column_name):
+            return self.__generate_data_by_scenario(p_column_name, 'rand') # if 'null' scenario for not null column - generate 'rand' scenario
         elif column_type == 'INT':
             return self.__generate_int_by_scenario(p_column_name, p_scenario_name)
         elif column_type == 'DECIMAL':
